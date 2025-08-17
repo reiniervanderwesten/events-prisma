@@ -1,7 +1,6 @@
 {
   "name": "express-events",
   "version": "1.0.0",
-  "type": "module",
   "description": "Your first ever REST API for managing events",
   "main": "src/index.js",
   "scripts": {

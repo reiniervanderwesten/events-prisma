@@ -1,65 +1,60 @@
-import { PrismaClient } from '@prisma/client'
-import categoryData from '../data/categories.json' with { type: 'json' }
-import eventData from '../data/events.json' with { type: 'json' }
-import userData from '../data/users.json' with { type: 'json' }
+import { PrismaClient } from "@prisma/client";
+import eventsData from "../src/data/events.json" with { type: "json" };
+import userData from "../src/data/users.json" with { type: "json" };
+import categoryData from "../src/data/categories.json" with { type: "json" };
 
+const prisma = new PrismaClient({ log: ["query", "info", "warn", "error"] });
 
-
-
-
-const prisma = new PrismaClient({ log: ['query', 'info', 'warn', 'error'] })
-
-
-async function main () {
-  const { categories } = categoryData
-  const {events}= eventData
-  const { users } = userData
-  
-
+async function main() {
+  const { events } = eventsData;
+  const { users } = userData;
+  const { categories } = categoryData;
 
   for (const category of categories) {
     await prisma.category.upsert({
       where: { id: category.id },
       update: {},
-      create: category
-    })
+      create: category,
+    });
   }
 
   for (const user of users) {
     await prisma.user.upsert({
       where: { id: user.id },
       update: {},
-      create: user
-    })
+      create: user,
+    });
   }
 
-  // First destructure recordData
-
-
-// Then loop through records
-    for (const event of events) {
-        await prisma.event.upsert({
-            where: { id: event.id },
-            update: {},
-            create: event
-        })
-    }
-
-  
-  
-    
-
-  
+  for (const event of events) {
+    await prisma.event.upsert({
+      where: { id: event.id },
+      update: {},
+      create: {
+        id: event.id,
+        title: event.title,
+        description: event.description,
+        startTime: event.startTime,
+        endTime: event.endTime,
+        location: event.location,
+        image: event.image,
+        categoryIds: {
+          connect: event.categoryIds.map((id) => ({ id })),
+        },
+        createdBy: {
+          connect: { id: event.createdBy },
+        },
+      },
+    });
+  }
 }
-
 
 main()
   .then(async () => {
-    await prisma.$disconnect()
+    await prisma.$disconnect();
   })
   .catch(async (e) => {
-    console.error(e)
-    await prisma.$disconnect()
-    process.exit(1)
-  })
-
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });

@@ -13,10 +13,14 @@ router.get("/", (req, res) => {
   res.json(users);
 });
 
-router.post("/", auth, (req, res) => {
-  const { name, password, username, image } = req.body;
-  const newUser = createUser(username, name, password, image);
-  res.status(201).json(newUser);
+router.post("/", async (req, res, next) => {
+  try {
+    const { name, password, username, image } = req.body;
+    const newUser = await createUser(username, name, password, image);
+    res.status(201).json(newUser);
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.get("/:id", (req, res) => {

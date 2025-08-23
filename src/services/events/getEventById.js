@@ -1,7 +1,16 @@
-import eventsData from "../../data/events.json" with { type: "json" };
+import { PrismaClient } from '@prisma/client'
 
-const getEventById = (id) => {
-  return eventsData.events.find((event) => event.id === id);
-};
+const getEventById = async (id) => {
+  const prisma = new PrismaClient()
+  const event = await prisma.event.findUnique({
+    where: {
+      id
+    }
+  })
 
-export default getEventById;
+  
+  return event
+}
+
+export default getEventById 
+

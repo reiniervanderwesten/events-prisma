@@ -38,9 +38,9 @@ router.post("/", auth, (req, res) => {
   res.status(201).json(newEvent);
 });
 
-router.get("/:id", (req, res) => {
+router.get("/:id", async(req, res) => {
   const { id } = req.params;
-  const event = getEventById(id);
+  const event = await getEventById(id);
 
   if (!event) {
     res.status(404).json({ message: `Event with id ${id} not found` });

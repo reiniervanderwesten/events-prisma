@@ -14,29 +14,35 @@ router.get("/", async(req, res) => {
   res.json(events);
 });
 
-router.post("/", auth, (req, res) => {
-  const {
-    name,
-    description,
-    location,
-    image,
-    startTime,
-    endTime,
-    createdBy,
-    categoryIds,
-  } = req.body;
-  const newEvent = createEvent(
-    name,
-    description,
-    location,
-    image,
-    startTime,
-    endTime,
-    createdBy,
-    categoryIds
-  );
-  res.status(201).json(newEvent);
+router.post("/", async (req, res, next) => {
+  try {
+    const {
+      title,
+      description,
+      location,
+      image,
+      startTime,
+      endTime,
+      createdBy,
+      categoryIds,
+    } = req.body;
+    const newEvent = await createEvent(
+      title,
+      description,
+      location,
+      image,
+      startTime,
+      endTime,
+      createdBy,
+      categoryIds
+    );
+    res.status(201).json(newEvent);
+  } catch (error) {
+    next(error);
+  }
 });
+
+
 
 router.get("/:id", async(req, res) => {
   const { id } = req.params;

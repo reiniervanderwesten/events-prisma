@@ -22,7 +22,7 @@ const createEvent = async (
       createdBy: {
         connect: { id: createdBy },
       },
-      categories: {
+      categoryIds: {
         connect: categoryIds.map((id) => ({ id })),
       },
     },

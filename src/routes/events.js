@@ -14,7 +14,7 @@ router.get("/", async(req, res) => {
   res.json(events);
 });
 
-router.post("/", async (req, res, next) => {
+router.post("/",  async (req, res, next) => {
   try {
     const {
       title,

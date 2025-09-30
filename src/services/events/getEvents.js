@@ -1,15 +1,20 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from "@prisma/client";
 
 const getEvents = async (title, location) => {
-  const prisma = new PrismaClient()
-
-  return prisma.event.findMany({
+  const prisma = new PrismaClient();
+  const events = await prisma.event.findMany({
     where: {
-      title,
-      location
-    }
-  })
-}
+      title: {
+        contains: title,
+      },
+      location: {
+        contains: location,
+      },
+    },
+  });
 
-export default getEvents
+  return events;
+};
+
+export default getEvents;
 
